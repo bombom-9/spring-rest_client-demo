@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.demo.server.exception.DfException;
 import com.demo.server.service.ServerService;
+import com.demo.server.service.TemplateServerService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,6 +17,8 @@ import lombok.RequiredArgsConstructor;
 public class ServerController {
 
 	private final ServerService serverService;
+	
+	private final TemplateServerService templateServerService;
 
 	@GetMapping("/servers")
 	public ResponseEntity<?> getServers() throws Throwable {
@@ -44,6 +47,33 @@ public class ServerController {
 
 		}
 
+	}
+	
+	@GetMapping("/template/servers")
+	public ResponseEntity<?> getTemplateServers() throws Throwable {
+
+		try {
+			return ResponseEntity.ok(templateServerService.getServers());
+
+		} catch (DfException e) {
+			return new ResponseEntity<>(e.getError(), HttpStatusCode.valueOf(e.getError().getStatus()));
+
+		}
+
+	}
+	
+	@GetMapping("/template/servers/{serverId}/characters/{characterId}")
+	public ResponseEntity<?> getTemplateCharacter(@PathVariable("serverId") String serverId,
+			@PathVariable("characterId") String characterId) throws Throwable {
+		
+		try {
+			return ResponseEntity.ok(templateServerService.getCharacter(serverId, characterId));
+
+		} catch (DfException e) {
+			return new ResponseEntity<>(e.getError(), HttpStatusCode.valueOf(e.getError().getStatus()));
+
+		}
+		
 	}
 
 }
