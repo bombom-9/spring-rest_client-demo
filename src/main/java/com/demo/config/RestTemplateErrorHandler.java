@@ -7,10 +7,13 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResponseErrorHandler;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.demo.server.exception.DfException;
+import com.demo.cloudinary.exception.CloudinaryException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Component
 public class RestTemplateErrorHandler implements ResponseErrorHandler {
 
@@ -29,8 +32,11 @@ public class RestTemplateErrorHandler implements ResponseErrorHandler {
             throw new ResponseStatusException(httpResponse.getStatusCode());
             
         } else if (httpResponse.getStatusCode().is4xxClientError()) {
-        	DfException exception = objectMapper.readValue(httpResponse.getBody(), DfException.class);
-			throw exception;
+        	CloudinaryException exception = objectMapper.readValue(httpResponse.getBody(), CloudinaryException.class);
+        	exception.setHttpStatusCode(httpResponse.getStatusCode());
+        	
+        	log.error("http status : " + httpResponse.getStatusCode() + " / error message : " + exception.getError().getMessage());
+        	throw exception;
         }
     }
     
