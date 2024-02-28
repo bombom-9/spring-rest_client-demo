@@ -11,13 +11,14 @@ import org.springframework.web.client.RestTemplate;
 public class RestTemplateConfig {
 
 	@Bean
-	public RestTemplate restTemplate() {
-		
-		RestTemplateBuilder builder = new RestTemplateBuilder();
+	public RestTemplate restTemplate(RestTemplateBuilder builder) {
+
 		builder.setConnectTimeout(Duration.ofMillis(3000));
 		builder.setReadTimeout(Duration.ofMillis(3000));
 
 		RestTemplate restTemplate = builder.build();
+
+		restTemplate.getInterceptors().add(new RestTemplateInterceptor());
 		restTemplate.setErrorHandler(new RestTemplateErrorHandler());
 
 		return restTemplate;

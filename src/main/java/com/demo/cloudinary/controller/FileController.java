@@ -13,9 +13,6 @@ import com.demo.cloudinary.service.FileService;
 import com.demo.cloudinary.vo.FileListSearchResponse;
 import com.demo.cloudinary.vo.FileUploadResponse;
 
-import io.micrometer.core.annotation.Timed;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.Timer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,9 +23,6 @@ public class FileController {
 	
 	private final FileService fileService;
 	
-	private final MeterRegistry meterRegistry;
-	
-	@Timed(value = "get-files")
 	@GetMapping("/files")
 	public FileListSearchResponse getFiles() {
 		
@@ -48,8 +42,6 @@ public class FileController {
 
 	@GetMapping("/files/{id}")
 	public FileListSearchResponse getFile(@PathVariable String id) {
-		
-		Timer timer = Timer.builder("query_get_gallery_execution_time").register(meterRegistry);
 		
 		ResponseEntity<FileListSearchResponse> response;
 		

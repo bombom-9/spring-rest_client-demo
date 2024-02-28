@@ -1,18 +1,4 @@
 spring.application.name: rest-template-demo
 
-management:  
-  endpoints:  
-    prometheus:  
-      enabled: true  
-    web:  
-      exposure:  
-        include: '*'
-  metrics:
-    tags:
-      application: monitoring
-      
-logging:
-  pattern:
-    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
-  level:
-    org.springframework.web.client.RestTemplate: DEBUG
+management.tracing.sampling.probability: 1.0
+management.endpoints.web.exposure.include: prometheus
